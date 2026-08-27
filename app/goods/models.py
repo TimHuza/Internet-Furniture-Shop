@@ -31,3 +31,22 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    # Category -> id prefix mapping used to build the human-readable product id
+    CATEGORY_ID_PREFIXES = {
+        "bedroom": "10",
+        "kitchen": "20",
+        "living-room": "30",
+        "office": "40",
+        "furniture": "50",
+        "decoration": "60",
+    }
+
+    def display_id(self):
+        prefix = self.CATEGORY_ID_PREFIXES.get(self.category.slug, "00")
+        return f"{prefix}{self.id:03}"
+
+    def sell_price(self):
+        if self.discount:
+            return round(self.price - self.price * self.discount / 100, 2) 
+        return self.price
